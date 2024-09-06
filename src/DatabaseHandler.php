@@ -28,7 +28,7 @@ class DatabaseHandler {
             return [
                 "id" => (int) $last_id,
                 "task_name" => $task_name,
-                "isDone" => $isDone,
+                "isDone" => false,
             ];
     
         } catch (PDOException $e) {
