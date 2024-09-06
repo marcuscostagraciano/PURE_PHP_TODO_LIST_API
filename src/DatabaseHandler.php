@@ -10,8 +10,7 @@ class DatabaseHandler {
     }
 
     // Crud
-    // public static function postTodo(string $task_name): array {
-    public static function postTodo(string $task_name) {
+    public static function postTodo(string $task_name): array {
         self::initializeConnection();
 
         $sql = 'INSERT INTO todo (task_name) VALUES (:task_name)';
@@ -33,8 +32,8 @@ class DatabaseHandler {
             ];
     
         } catch (PDOException $e) {
-            error_log("Database error: " . $e->getMessage());
-            return false;
+            http_response_code(500);
+            return ['message' =>  $e->getMessage()];
         }
     }
 
