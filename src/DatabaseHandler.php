@@ -44,7 +44,11 @@ class DatabaseHandler {
         
         $stmt = self::$conn->query('SELECT id, task_name, isDone FROM todo');
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
+        foreach ($result as &$row) {
+            $row['isDone'] = (bool) $row['isDone'];
+        }
+        
         return $result;
     }
 
