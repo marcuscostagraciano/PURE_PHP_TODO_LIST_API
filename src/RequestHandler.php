@@ -19,8 +19,7 @@ class RequestHandler {
             case 'POST':
                 http_response_code(201);
                 return DatabaseHandler::postTodo(
-                    $this->request['PARAMS']['task_name'],
-                    $this->request['PARAMS']['isDone'] ?? false
+                    $this->request['PARAMS']['task_name']
                 );
             case 'GET':
                 http_response_code(200);

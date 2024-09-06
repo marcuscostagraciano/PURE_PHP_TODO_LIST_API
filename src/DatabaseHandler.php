@@ -10,7 +10,7 @@ class DatabaseHandler {
     }
 
     // Crud
-    public static function postTodo(string $task_name, bool $isDone): array {
+    public static function postTodo(string $task_name): array {
         self::initializeConnection();
 
         $sql = 'INSERT INTO todo (task_name, isDone) VALUES (:task_name, :isDone)';
@@ -20,7 +20,6 @@ class DatabaseHandler {
 
             $stmt = self::$conn->prepare($sql);
             $stmt->bindParam(':task_name', $task_name, PDO::PARAM_STR);
-            $stmt->bindParam(':isDone', $isDone, PDO::PARAM_BOOL);
             $stmt->execute();
 
             $last_id = self::$conn->lastInsertId();
