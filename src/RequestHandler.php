@@ -20,14 +20,21 @@ class RequestHandler {
                 http_response_code(201);
                 return DatabaseHandler::postTodo(
                     $this->request['PARAMS']['task_name'],
-                    $this->request['PARAMS']['isDone'] ?? false);
+                    $this->request['PARAMS']['isDone'] ?? false
+                );
             case 'GET':
                 http_response_code(200);
                 return DatabaseHandler::getTodoList();
             case 'DELETE':
-                return DatabaseHandler::deleteTodo($this->request['PARAMS']['id']);
+                return DatabaseHandler::deleteTodo(
+                    $this->request['PARAMS']['id']
+                );
+            case 'PATCH':
+                return DatabaseHandler::patchTodo(
+                    $this->request['PARAMS']['id'],
+                    $this->request['PARAMS']['isDone'],
+                );
             default:
-                // Method not allowed
                 http_response_code(405);
                 return ["message" => "Method not allowed"];
         }

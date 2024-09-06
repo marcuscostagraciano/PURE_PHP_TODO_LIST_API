@@ -52,13 +52,24 @@ class DatabaseHandler {
     }
 
     // crUd
-    public static function patchTodo(string $id, bool $isDone): array {
+    public static function patchTodo(string $id, bool $newIsDoneStatus): array {
         self::initializeConnection();
-        // Use self::$conn to perform database operations
-        // Example:
-        // $stmt = self::$conn->prepare("UPDATE todo_list SET is_done = ? WHERE id = ?");
-        // $stmt->execute([$isDone, $id]);
-        // return [ 'status' => 'success' ];
+        
+        $sql = 'UPDATE todo SET isDone=:isDone WHERE id=:id';
+
+        try {
+            self::$conn->beginTransaction();
+
+            $stmt = self::$conn->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':isDone', $newIsDoneStatus, PDO::PARAM_BOOL);
+            $stmt->execute();
+
+            self::$conn->commit();
+            return self::returnResponse(200, "Successfully patched");    
+        } catch (PDOException $e) {
+            return self::returnResponse(500, $e->getMessage());    
+        }
     }
 
     // cruD
