@@ -10,16 +10,17 @@ class DatabaseHandler {
     }
 
     // Crud
-    public static function postTodo(string $task_name): array {
+    public static function postTodo(string $task_name, bool $isDone): array {
         self::initializeConnection();
 
-        $sql = 'INSERT INTO todo (task_name) VALUES (:task_name)';
+        $sql = 'INSERT INTO todo (task_name, isDone) VALUES (:task_name, :isDone)';
 
         try {
             self::$conn->beginTransaction();
 
             $stmt = self::$conn->prepare($sql);
             $stmt->bindParam(':task_name', $task_name, PDO::PARAM_STR);
+            $stmt->bindParam(':isDone', $isDone, PDO::PARAM_BOOL);
             $stmt->execute();
 
             $last_id = self::$conn->lastInsertId();
@@ -28,7 +29,7 @@ class DatabaseHandler {
             return [
                 "id" => (int) $last_id,
                 "task_name" => $task_name,
-                "isDone" => false,
+                "isDone" => $isDone,
             ];
     
         } catch (PDOException $e) {
