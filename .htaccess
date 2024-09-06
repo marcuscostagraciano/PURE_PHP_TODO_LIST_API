@@ -1,0 +1,14 @@
+# Response configs
+php_value default_mimetype application/json
+AddDefaultCharset UTF-8
+
+# Environment variables
+SetEnv DATABASE_HOSTNAME "localhost"
+SetEnv DATABASE_USER "root"
+SetEnv DATABASE_PASSWORD ""
+SetEnv DATABASE_NAME "todo_list"
+
+Header set Access-Control-Allow-Origin "*"
+
+RewriteEngine On
+RewriteRule . index.php
