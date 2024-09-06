@@ -13,7 +13,7 @@ class DatabaseHandler {
     public static function postTodo(string $task_name): array {
         self::initializeConnection();
 
-        $sql = 'INSERT INTO todo (task_name, isDone) VALUES (:task_name, :isDone)';
+        $sql = 'INSERT INTO todo (task_name) VALUES (:task_name)';
 
         try {
             self::$conn->beginTransaction();
