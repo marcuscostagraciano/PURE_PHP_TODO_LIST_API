@@ -52,14 +52,14 @@ class DatabaseHandler {
     }
 
     // crUd
-    public static function patchTodo(string $id, bool $newIsDoneStatus): array {
+    public static function patchTodo(string $id, string $newIsDoneStatus): array {
         self::initializeConnection();
+        $newIsDoneStatus = $newIsDoneStatus === "true" ? 1 : 0;
         
         $sql = 'UPDATE todo SET isDone=:isDone WHERE id=:id';
-
+        
         try {
             self::$conn->beginTransaction();
-
             $stmt = self::$conn->prepare($sql);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':isDone', $newIsDoneStatus, PDO::PARAM_BOOL);
