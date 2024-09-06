@@ -38,7 +38,5 @@ class RequestHandler {
                 http_response_code(405);
                 return ["message" => "Method not allowed"];
         }
-
-        // return $this->request;
     }
 }

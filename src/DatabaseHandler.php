@@ -90,11 +90,6 @@ class DatabaseHandler {
         } catch (PDOException $e) {
             return self::returnResponse(500, $e->getMessage());    
         }
-        // Use self::$conn to perform database operations
-        // Example:
-        // $stmt = self::$conn->prepare("DELETE FROM todo_list WHERE id = ?");
-        // $stmt->execute([$id]);
-        // return [ 'status' => 'success' ];
     }
 
     private static function returnResponse(int $responseCode, string $responseMsg): array {
