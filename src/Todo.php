@@ -4,7 +4,7 @@ class Todo
 {
     private static ?object $conn = null;
 
-    public static function initializeConnection(): void
+    private static function initializeConnection(): void
     {
         if (!isset(self::$conn)) {
             self::$conn = DatabaseConnection::getConnection();
@@ -12,17 +12,15 @@ class Todo
     }
 
     // Crud
-    public static function postTodo(string $task_name): array
+    private static function postTodo(string $taskName): array
     {
-        self::initializeConnection();
-
         $sql = 'INSERT INTO todo (task_name) VALUES (:task_name)';
 
         try {
             self::$conn->beginTransaction();
 
             $stmt = self::$conn->prepare($sql);
-            $stmt->bindParam(':task_name', $task_name, PDO::PARAM_STR);
+            $stmt->bindParam(':task_name', $taskName, PDO::PARAM_STR);
             $stmt->execute();
 
             $last_id = self::$conn->lastInsertId();
@@ -30,7 +28,7 @@ class Todo
 
             return [
                 "id" => $last_id,
-                "task_name" => $task_name,
+                "task_name" => $taskName,
                 "isDone" => false,
             ];
         } catch (PDOException $e) {
@@ -39,10 +37,8 @@ class Todo
     }
 
     // cRud
-    public static function getTodoList(): array
+    private static function getTodoList(): array
     {
-        self::initializeConnection();
-
         $stmt = self::$conn->query('SELECT id, task_name, isDone FROM todo');
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -54,11 +50,8 @@ class Todo
     }
 
     // crUd
-    public static function patchTodo(string $id, string $newIsDoneStatus): array
+    private static function patchTodo(int $id, int $newIsDoneStatus): array
     {
-        self::initializeConnection();
-        $newIsDoneStatus = $newIsDoneStatus === "true" ? 1 : 0;
-
         $sql = 'UPDATE todo SET isDone=:isDone WHERE id=:id';
 
         try {
@@ -76,10 +69,8 @@ class Todo
     }
 
     // cruD
-    public static function deleteTodo(string $id)
+    private static function deleteTodo(int $id): array
     {
-        self::initializeConnection();
-
         $sql = 'DELETE FROM todo WHERE id = :id';
 
         try {
@@ -103,5 +94,29 @@ class Todo
             'status' => $responseCode,
             'message' => $responseMsg
         ];
+    }
+
+    public static function handleTodoRequest(array $request_info): array
+    {
+        self::initializeConnection();
+
+        $method = $request_info['METHOD'];
+        $idToConsult = $request_info['ID_TO_CONSULT'];
+        $taskName = $request_info['BODY']['task_name'] ?? null;
+        $isDone = $request_info['BODY']['isDone'] ?? null;
+
+        switch ($method) {
+            case 'POST':
+                return self::postTodo($taskName);
+            case 'GET':
+                return self::getTodoList();
+            case 'DELETE':
+                return self::deleteTodo($idToConsult);
+            case 'PATCH':
+                return self::patchTodo($idToConsult, $isDone);
+            default:
+                http_response_code(405);
+                return ["message" => "Method not allowed"];
+        }
     }
 }
