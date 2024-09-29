@@ -11,6 +11,7 @@ $request_info = [
     'METHOD' => $request_method,
     'ENDPOINT' => $request_endpoint,
     'PARAMS' => $_REQUEST,
+    'BODY' => json_decode(file_get_contents('php://input')),
 ];
 
 $request_handler = new RequestHandler($request_info);
