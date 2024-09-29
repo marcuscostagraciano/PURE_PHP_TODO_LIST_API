@@ -17,4 +17,4 @@ $request_info = [
 $request_handler = new RequestHandler($request_info);
 $data = $request_handler->getResponse();
 
-echo json_encode($data);
+echo json_encode($data, JSON_NUMERIC_CHECK);
