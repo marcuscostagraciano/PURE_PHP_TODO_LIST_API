@@ -12,15 +12,16 @@ class Todo
     }
 
     // Crud
-    private static function postTodo(string $taskName): array
+    private static function postTodo(string $taskName, int $isDone = 0): array
     {
-        $sql = 'INSERT INTO todo (task_name) VALUES (:task_name)';
+        $sql = 'INSERT INTO todo (task_name, isDone) VALUES (:task_name, :isDone)';
 
         try {
             self::$conn->beginTransaction();
 
             $stmt = self::$conn->prepare($sql);
             $stmt->bindParam(':task_name', $taskName, PDO::PARAM_STR);
+            $stmt->bindParam(':isDone', $isDone, PDO::PARAM_INT);
             $stmt->execute();
 
             $last_id = self::$conn->lastInsertId();
@@ -29,7 +30,7 @@ class Todo
             return [
                 "id" => $last_id,
                 "task_name" => $taskName,
-                "isDone" => false,
+                "isDone" => $isDone,
             ];
         } catch (PDOException $e) {
             return self::returnResponse(500, $e->getMessage());
@@ -122,7 +123,7 @@ class Todo
 
         switch ($method) {
             case 'POST':
-                return self::postTodo($taskName);
+                return self::postTodo($taskName, $isDone);
             case 'GET':
                 if ($idToConsult)
                     return self::getTodo($idToConsult);
