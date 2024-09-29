@@ -49,6 +49,21 @@ class Todo
         return $result;
     }
 
+    // cRud
+    private static function getTodo(int $id): array
+    {
+        try {
+            $sql = 'SELECT id, task_name, isDone FROM todo WHERE id=:id';
+
+            $stmt = self::$conn->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+        }
+        return $result;
+    }
+
     // crUd
     private static function patchTodo(int $id, int $newIsDoneStatus): array
     {
@@ -101,7 +116,7 @@ class Todo
         self::initializeConnection();
 
         $method = $request_info['METHOD'];
-        $idToConsult = $request_info['ID_TO_CONSULT'];
+        $idToConsult = $request_info['ID_TO_CONSULT'] ?? null;
         $taskName = $request_info['BODY']['task_name'] ?? null;
         $isDone = $request_info['BODY']['isDone'] ?? null;
 
@@ -109,6 +124,8 @@ class Todo
             case 'POST':
                 return self::postTodo($taskName);
             case 'GET':
+                if ($idToConsult)
+                    return self::getTodo($idToConsult);
                 return self::getTodoList();
             case 'DELETE':
                 return self::deleteTodo($idToConsult);
