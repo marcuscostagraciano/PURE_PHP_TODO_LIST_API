@@ -119,19 +119,23 @@ class Todo
         $method = $request_info['METHOD'];
         $idToConsult = $request_info['ID_TO_CONSULT'] ?? null;
         $taskName = $request_info['BODY']['task_name'] ?? null;
-        $isDone = $request_info['BODY']['isDone'] ?? null;
+        $isDone = isset($request_info['BODY']['isDone']) ?? 0;
 
         switch ($method) {
             case 'POST':
                 return self::postTodo($taskName, $isDone);
+
             case 'GET':
                 if ($idToConsult)
                     return self::getTodo($idToConsult);
                 return self::getTodoList();
+
             case 'DELETE':
                 return self::deleteTodo($idToConsult);
+
             case 'PATCH':
                 return self::patchTodo($idToConsult, $isDone);
+
             default:
                 http_response_code(405);
                 return ["message" => "Method not allowed"];
