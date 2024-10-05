@@ -27,6 +27,7 @@ class Todo
             $last_id = self::$conn->lastInsertId();
             self::$conn->commit();
 
+            http_response_code(201);
             return [
                 "id" => $last_id,
                 "task_name" => $taskName,
