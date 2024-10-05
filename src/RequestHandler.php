@@ -23,7 +23,7 @@ class RequestHandler
             http_response_code(200);
             header('Access-Control-Allow-Methods: DELETE, GET, PATCH, POST');
             header("Access-Control-Max-Age: 60 * $CACHED_MINUTES_OF_PREFLIGHT_REQUEST");
-            return;
+            return null;
         }
 
         return Todo::handleTodoRequest($this->request);
