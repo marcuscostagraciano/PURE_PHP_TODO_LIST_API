@@ -4,7 +4,6 @@ class RequestHandler
 {
     // Has the keys: 'METHOD', 'ENDPOINT' and 'PARAMS'.
     private array $request;
-    public array $data;
 
     public function __construct(array $request_info)
     {
@@ -16,7 +15,7 @@ class RequestHandler
         return $this->request;
     }
 
-    public function getResponse()
+    public function getResponse(): array
     {
         return Todo::handleTodoRequest($this->request);
     }
