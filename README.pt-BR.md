@@ -1,4 +1,4 @@
-# Pure PHP To-Do List Api
+# PHP Puro API To-Do List
 
 [![en](https://img.shields.io/badge/lang-en-red.svg)](README.md)
 [![pt-BR](https://img.shields.io/badge/lang-pt--BR-green.svg)](README.pt-BR.md)
