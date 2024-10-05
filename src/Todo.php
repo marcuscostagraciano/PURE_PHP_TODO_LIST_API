@@ -66,15 +66,14 @@ class Todo
     }
 
     // crUd
-    private static function patchTodo(int $id, int $newIsDoneStatus): array
+    private static function patchTodo(int $id): array
     {
-        $sql = 'UPDATE todo SET isDone=:isDone WHERE id=:id';
+        $sql = 'UPDATE todo SET isDone= NOT isDone WHERE id=:id';
 
         try {
             self::$conn->beginTransaction();
             $stmt = self::$conn->prepare($sql);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->bindParam(':isDone', $newIsDoneStatus, PDO::PARAM_BOOL);
             $stmt->execute();
 
             self::$conn->commit();
@@ -119,7 +118,7 @@ class Todo
         $method = $request_info['METHOD'];
         $idToConsult = $request_info['ID_TO_CONSULT'] ?? null;
         $taskName = $request_info['BODY']['task_name'] ?? null;
-        $isDone = isset($request_info['BODY']['isDone']) ?? 0;
+        $isDone = $request_info['BODY']['isDone'] ?? 0;
 
         switch ($method) {
             case 'POST':
@@ -134,7 +133,7 @@ class Todo
                 return self::deleteTodo($idToConsult);
 
             case 'PATCH':
-                return self::patchTodo($idToConsult, $isDone);
+                return self::patchTodo($idToConsult);
 
             default:
                 http_response_code(405);
